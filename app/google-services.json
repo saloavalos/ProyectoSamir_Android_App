@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "472588961932",
+    "firebase_url": "https://proyectosamir-2d3bd.firebaseio.com",
+    "project_id": "proyectosamir-2d3bd",
+    "storage_bucket": "proyectosamir-2d3bd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:472588961932:android:160a49ec10a1a64db353a9",
+        "android_client_info": {
+          "package_name": "com.example.proyectosamir"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "472588961932-lptdnvfsrlpcahtia5bvsfupbh1kq0rh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.proyectosamir",
+            "certificate_hash": "61e9dca7e95639819a3105184ef39ae11482a371"
+          }
+        },
+        {
+          "client_id": "472588961932-rbk7lgle4qp507u9gu640cl79ticv1bq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAgtRjbKF64upYsoVQtng9mpf8igk8bPSc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "472588961932-rbk7lgle4qp507u9gu640cl79ticv1bq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
