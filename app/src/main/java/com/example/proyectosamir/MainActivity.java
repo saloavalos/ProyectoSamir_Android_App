@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
             counter--;
 
             Info.setText("Numero de Intentos Restantes: " + String.valueOf(counter));
-
+            // ..
             if(counter ==0){
                 Login.setEnabled(false);
             }
