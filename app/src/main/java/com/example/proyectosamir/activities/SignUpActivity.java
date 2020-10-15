@@ -1,4 +1,4 @@
-package com.example.proyectosamir;
+package com.example.proyectosamir.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,6 +14,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.proyectosamir.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -22,12 +23,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import org.w3c.dom.Text;
-
 import java.util.HashMap;
 import java.util.Map;
 
-public class RegisterLogin extends AppCompatActivity {
+public class SignUpActivity extends AppCompatActivity {
 
     private static final String TAG = "RegisterLoginActivity";
     EditText tNombre, tCorreo, tContraseña, tDireccion, tColonia, tSeccional, tMunicipio;
@@ -44,7 +43,7 @@ public class RegisterLogin extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register_login);
+        setContentView(R.layout.activity_sign_up);
 
         //("t Es la variable,s bt es la etiqueta")
 
@@ -130,7 +129,7 @@ public class RegisterLogin extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()){
-                            Toast.makeText(RegisterLogin.this, "Usuario Creado.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SignUpActivity.this, "Usuario Creado.", Toast.LENGTH_SHORT).show();
                             userID = fAuth.getCurrentUser().getUid();
                             DocumentReference documentReference = fStore.collection( "users").document(userID);
                             Map<String,Object> user = new HashMap<>();
@@ -147,7 +146,7 @@ public class RegisterLogin extends AppCompatActivity {
                             startActivity(new Intent(getApplicationContext(),MainActivity.class));
 
                         }else{
-                            Toast.makeText(RegisterLogin.this, "Error! " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SignUpActivity.this, "Error! " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
 
 
                         }

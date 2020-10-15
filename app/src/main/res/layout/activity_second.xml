@@ -9,7 +9,7 @@
     android:orientation="vertical"
     android:layout_gravity="center"
     android:padding="10dp"
-    tools:context=".SecondActivity">
+    tools:context=".activities.SecondActivity">
 
     <TextView
         android:id="@+id/textView2"

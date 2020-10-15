@@ -1,4 +1,4 @@
-package com.example.proyectosamir;
+package com.example.proyectosamir.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -13,9 +13,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
+
+import com.example.proyectosamir.R;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,6 +26,7 @@ import java.util.Date;
 
 public class SecondActivity extends AppCompatActivity {
 
+    private static final String TAG = "SeconActivity";
     private ImageView img;
 
     @Override
@@ -59,8 +62,8 @@ public class SecondActivity extends AppCompatActivity {
             File photoFile = null;
             try {
                 photoFile = createImageFile();
-            } catch (IOException ex) {
-
+            } catch (IOException e) {
+                Log.d(TAG, "tomarFoto: " + e);
             }
 
             if (photoFile != null) {
@@ -70,15 +73,15 @@ public class SecondActivity extends AppCompatActivity {
             }
         }
     }
-
-    static final int REQUEST_IMAGE_CAPTURE = 1;
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            Bundle extras = data.getExtras();
-            Bitmap imageBitmap = (Bitmap) extras.get("data");
-            img.setImageBitmap(imageBitmap);
-        }
-    }
+// aun no jala
+//    static final int REQUEST_IMAGE_CAPTURE = 1;
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+//            Bundle extras = data.getExtras();
+//            Bitmap imageBitmap = (Bitmap) extras.get("data");
+//            img.setImageBitmap(imageBitmap);
+//        }
+//    }
 
 }
