@@ -1,4 +1,4 @@
-package com.example.proyectosamir.activities;
+package com.saloavalos.android_app_samir.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -10,7 +10,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.proyectosamir.R;
+import com.saloavalos.android_app_samir.R;
 
 public class SignInActivity extends AppCompatActivity {
 
