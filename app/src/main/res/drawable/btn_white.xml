@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <solid android:color="@color/color_btn_white"/>
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="@color/color_btn_white_pressed2">
+    <item android:id="@android:id/background">
+        <shape>
+            <stroke android:color="@color/color_btn_white"
+                android:width="1.5dp"/>
 
-    <corners android:radius="10dp"/>
+            <solid android:color="@color/color_white"/>
 
-</shape>
+            <corners android:radius="10dp"/>
+        </shape>
+    </item>
+</ripple>

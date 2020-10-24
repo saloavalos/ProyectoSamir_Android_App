@@ -1,4 +1,4 @@
-package com.example.proyectosamir;
+package com.saloavalos.android_app_samir;
 
 import org.junit.Test;
 

@@ -1,42 +1,34 @@
 {
   "project_info": {
-    "project_number": "472588961932",
-    "firebase_url": "https://proyectosamir-2d3bd.firebaseio.com",
-    "project_id": "proyectosamir-2d3bd",
-    "storage_bucket": "proyectosamir-2d3bd.appspot.com"
+    "project_number": "71005717533",
+    "firebase_url": "https://androidappsamir.firebaseio.com",
+    "project_id": "androidappsamir",
+    "storage_bucket": "androidappsamir.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:472588961932:android:160a49ec10a1a64db353a9",
+        "mobilesdk_app_id": "1:71005717533:android:7e0fdf1791231abacc72f4",
         "android_client_info": {
-          "package_name": "com.example.proyectosamir"
+          "package_name": "com.saloavalos.android_app_samir"
         }
       },
       "oauth_client": [
         {
-          "client_id": "472588961932-lptdnvfsrlpcahtia5bvsfupbh1kq0rh.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.proyectosamir",
-            "certificate_hash": "61e9dca7e95639819a3105184ef39ae11482a371"
-          }
-        },
-        {
-          "client_id": "472588961932-rbk7lgle4qp507u9gu640cl79ticv1bq.apps.googleusercontent.com",
+          "client_id": "71005717533-27cnr87lls9pjonuuaoji92jsa7r0hop.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAgtRjbKF64upYsoVQtng9mpf8igk8bPSc"
+          "current_key": "AIzaSyAF5kSbK9_FoR7oXgs9bmXxenYDgDMkst4"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "472588961932-rbk7lgle4qp507u9gu640cl79ticv1bq.apps.googleusercontent.com",
+              "client_id": "71005717533-27cnr87lls9pjonuuaoji92jsa7r0hop.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

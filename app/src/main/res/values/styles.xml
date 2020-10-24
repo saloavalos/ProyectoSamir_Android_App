@@ -1,11 +1,18 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
+<!--    <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">-->
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar.Bridge">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <!--Button white-->
+    <style name="btn_white" parent="Widget.AppCompat.Button">
+        <item name="android:background">@drawable/btn_white</item>
+        <item name="android:textColor">@color/color_title</item>
+        <item name="android:stateListAnimator">@null</item>
+    </style>
 </resources>

@@ -7,9 +7,12 @@
     <color name="color_white">#fff</color>
     <color name="color_bg_general">#F3F3F3</color>
     <color name="color_black_general">#242424</color>
+    <color name="color_title">#333333</color>
+    <color name="color_subtitle">#474747</color>
 
     <!-- Main activity colors -->
     <color name="color_bg_main">#ECA400</color>
     <color name="color_btn_white">#F3F3F3</color>
     <color name="color_btn_white_pressed">#ECECEC</color>
+    <color name="color_btn_white_pressed2">#FFF7D9</color>
 </resources>
