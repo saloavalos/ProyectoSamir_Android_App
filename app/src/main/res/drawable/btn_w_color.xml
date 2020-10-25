@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ripple xmlns:android="http://schemas.android.com/apk/res/android"
-    android:color="@color/color_btn_white_pressed2">
+    android:color="@color/colorPrimaryDark">
+
     <item android:id="@android:id/background">
         <shape>
-<!--            <stroke android:color="@color/color_btn_white"-->
-<!--                android:width="1.5dp"/>-->
-
-            <solid android:color="@color/color_white"/>
+            <solid android:color="@color/colorPrimary"/>
 
             <corners android:radius="5dp"/>
         </shape>

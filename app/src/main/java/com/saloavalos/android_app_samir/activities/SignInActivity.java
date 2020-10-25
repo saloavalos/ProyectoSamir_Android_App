@@ -51,8 +51,8 @@ public class SignInActivity extends AppCompatActivity {
         }
 
         if ((username.equals("Admin")) && (pass.equals("1234"))) {
-            Intent intent = new Intent(this, SecondActivity.class);
-            startActivity(intent);
+//            Intent intent = new Intent(this, SecondActivity.class);
+//            startActivity(intent);
         } else {
             counter--;
 

@@ -7,6 +7,12 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+
+        <!-- enable window transitions -->
+        <item name="android:windowContentTransitions">true</item>
+        <item name="android:windowActivityTransitions">true</item>
+
+
     </style>
 
     <!--Button white-->
@@ -15,4 +21,15 @@
         <item name="android:textColor">@color/color_title</item>
         <item name="android:stateListAnimator">@null</item>
     </style>
+
+    <!--Button with some bg color-->
+    <style name="btn_w_color" parent="Widget.AppCompat.Button">
+        <item name="android:background">@drawable/btn_w_color</item>
+        <item name="android:textColor">@color/color_title</item>
+        <item name="android:stateListAnimator">@null</item>
+    </style>
+
+
+
+
 </resources>
