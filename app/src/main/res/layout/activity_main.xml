@@ -54,35 +54,38 @@
         android:fontFamily="@font/open_sans_semibold"
         android:text="Registrarse"
         android:textColor="@color/color_black_general"
-        android:textSize="22sp"
+        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="@id/tv_main_subtitle"
         app:layout_constraintStart_toStartOf="@id/tv_main_subtitle"
         app:layout_constraintTop_toBottomOf="@id/tv_main_subtitle" />
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginBottom="32dp">
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginBottom="32dp"
         android:fontFamily="@font/open_sans"
         android:text="¿tienes una cuenta?"
         android:textColor="@color/color_white"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:textSize="20sp" />
 
     <TextView
         android:id="@+id/tv_signin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="32dp"
+        android:layout_marginStart="16dp"
         android:fontFamily="@font/open_sans_semibold"
         android:text="INICIA SESIÓN"
         android:textColor="@color/color_white"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        android:textSize="20sp"/>
+
+    </LinearLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
