@@ -56,7 +56,7 @@ public class SignInActivity extends AppCompatActivity {
         } else {
             counter--;
 
-            tv_info.setText("Numero de Intentos Restantes: " + String.valueOf(counter));
+//            tv_info.setText("Numero de Intentos Restantes: " + String.valueOf(counter));
 
             if (counter == 0) {
                 btn_signin.setEnabled(false);

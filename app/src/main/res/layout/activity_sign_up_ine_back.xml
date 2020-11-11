@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/color_white"
+    android:orientation="vertical"
     android:padding="16dp"
     tools:context=".activities.SignUpIneBackActivity">
 
@@ -14,6 +15,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="horizontal"
+        android:transitionName="transition_main_title"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -21,7 +23,8 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:onClick="goBack"
-            android:src="@drawable/ic_arrow_back" />
+            android:src="@drawable/ic_arrow_back"
+            app:tint="@color/color_title" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -38,14 +41,11 @@
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="132dp"
+        android:layout_marginTop="32dp"
         android:fontFamily="@font/open_sans_semibold"
         android:text="INE o IFE - Reverso"
         android:textColor="@color/color_subtitle"
-        android:textSize="20sp"
-        android:transitionName="title_transition"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linear_layout_top_part" />
+        android:textSize="20sp" />
 
     <TextView
         android:id="@+id/subtitle"
@@ -55,34 +55,27 @@
         android:fontFamily="@font/open_sans"
         android:text="Puedes tomar una foto o elegir una foto de tu galeria"
         android:textColor="@color/color_subtitle"
-        android:textSize="18sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/title" />
+        android:textSize="18sp" />
 
     <ImageView
-        android:id="@+id/iv_ine_frente"
+        android:id="@+id/iv_ine_reverso"
         android:layout_width="match_parent"
         android:layout_height="300dp"
         android:layout_marginTop="32dp"
-        android:layout_marginBottom="250dp"
         android:background="@drawable/bg_stroke"
-        android:padding="50dp"
-        android:src="@drawable/ic_outline_image"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/subtitle"
-        app:tint="@color/color_title" />
+        android:padding="15dp"
+        android:src="@drawable/ic_outline_image" />
 
     <Button
-        android:id="@+id/btn_signup_continue3"
+        android:id="@+id/btn_signup_continue"
         style="@style/btn_w_color"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
         android:enabled="false"
         android:fontFamily="@font/open_sans_semibold"
         android:text="Continuar"
         android:textSize="17sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        tools:layout_editor_absoluteX="16dp" />
+        android:transitionName="transition_btn_continue" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

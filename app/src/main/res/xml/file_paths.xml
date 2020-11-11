@@ -1,8 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 
+<!--Asi estaba antes pero no me dejaba abrir la camara-->
 <paths> xmlns:android="http://schemas.android.com/apk/res/android"
 <external-path
-    name="My images"
-    path="Android/data/com.saloavalos.proyectosamir/files/Pictures"/>
+    name="images"
+    path="Android/data/com.saloavalos.android_app_samir/files/Pictures"/>
 </paths>
+
+<!--<paths>-->
+<!--    <external-path-->
+<!--        name="external"-->
+<!--        path="." />-->
+<!--    <external-files-path-->
+<!--        name="external_files"-->
+<!--        path="." />-->
+<!--    <cache-path-->
+<!--        name="cache"-->
+<!--        path="." />-->
+<!--    <external-cache-path-->
+<!--        name="external_cache"-->
+<!--        path="." />-->
+<!--    <files-path-->
+<!--        name="files"-->
+<!--        path="." />-->
+<!--</paths>-->
 
