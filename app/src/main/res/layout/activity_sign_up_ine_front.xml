@@ -76,18 +76,6 @@
         android:textSize="17sp"
         android:transitionName="transition_btn_continue" />
 
-    <Button
-        android:id="@+id/btn_signup_upload"
-        style="@style/btn_white"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:fontFamily="@font/open_sans_semibold"
-        android:text="Subir imagen"
-        android:textColor="@color/color_white"
-        android:textSize="17sp"
-        app:backgroundTint="@color/color_title" />
-
     <ProgressBar
         android:id="@+id/progressbar"
         android:layout_width="100dp"

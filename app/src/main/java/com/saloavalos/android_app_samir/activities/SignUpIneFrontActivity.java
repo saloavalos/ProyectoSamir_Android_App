@@ -82,7 +82,6 @@ public class SignUpIneFrontActivity extends AppCompatActivity {
     private final String[] both_permissions = new String[]{Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE};
 
     // booleans para checar si acepto los permisos de camera y storage
-    private boolean isPermissionForAllGranted = false; // TODO quitar luego
     private boolean isCameraPermissionGranted = false;
     private boolean isStoragePermissionGranted = false;
 
@@ -349,14 +348,14 @@ public class SignUpIneFrontActivity extends AppCompatActivity {
                     if (!ActivityCompat.shouldShowRequestPermissionRationale(SignUpIneFrontActivity.this, Manifest.permission.CAMERA)
                         && !ActivityCompat.shouldShowRequestPermissionRationale(SignUpIneFrontActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
                         new AlertDialog.Builder(SignUpIneFrontActivity.this)
-                            .setMessage("You have permanently denied the permissions required to use the camera, go to settings to enable this permission")
-                            .setPositiveButton("Go to settings", new DialogInterface.OnClickListener() {
+                            .setMessage("Para poder tomar la foto, permite a la aplicación el acceso a tu camara y almacenamiento. Configuraciones > Permisos, y permite la Camara y Almacenamiento.")
+                            .setPositiveButton("Configuraciones", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
                                     gotoApplicationSettings();
                                 }
                             })
-                            .setNegativeButton("Cancel", null)
+                            .setNegativeButton("Ahora no", null)
                             .setCancelable(false)
                             .show();
                     }
@@ -374,14 +373,14 @@ public class SignUpIneFrontActivity extends AppCompatActivity {
                     //This block here means PERMANENTLY DENIED PERMISSION
                     if (!ActivityCompat.shouldShowRequestPermissionRationale(SignUpIneFrontActivity.this, Manifest.permission.CAMERA)) {
                         new AlertDialog.Builder(SignUpIneFrontActivity.this)
-                            .setMessage("You have permanently denied this permission, go to settings to enable this permission")
-                            .setPositiveButton("Go to settings", new DialogInterface.OnClickListener() {
+                            .setMessage("Para poder tomar la foto, permite a la aplicación el acceso a tu camara. Configuraciones > Permisos, y permite la Camara.")
+                            .setPositiveButton("Configuraciones", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
                                     gotoApplicationSettings();
                                 }
                             })
-                            .setNegativeButton("Cancel", null)
+                            .setNegativeButton("Ahora no", null)
                             .setCancelable(false)
                             .show();
 
@@ -399,17 +398,16 @@ public class SignUpIneFrontActivity extends AppCompatActivity {
                     //This block here means PERMANENTLY DENIED PERMISSION
                     if (!ActivityCompat.shouldShowRequestPermissionRationale(SignUpIneFrontActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
                         new AlertDialog.Builder(SignUpIneFrontActivity.this)
-                            .setMessage("You have permanently denied this permission, go to settings to enable this permission")
-                            .setPositiveButton("Go to settings", new DialogInterface.OnClickListener() {
+                            .setMessage("Para poder tomar la foto, permite a la aplicación el acceso a tu almacenamiento. Configuraciones > Permisos, y permite el Almacenamiento.")
+                            .setPositiveButton("Configuraciones", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
                                     gotoApplicationSettings();
                                 }
                             })
-                            .setNegativeButton("Cancel", null)
+                            .setNegativeButton("Ahora no", null)
                             .setCancelable(false)
                             .show();
-
                     }
                 }
 
@@ -448,7 +446,8 @@ public class SignUpIneFrontActivity extends AppCompatActivity {
                 mediaScanIntent.setData(contentUri);
                 this.sendBroadcast(mediaScanIntent);
 
-                //            uploadImageToFirebase(f.getName(), contentUri);
+                uploadImageToFirebase(f.getName(), contentUri);
+
             } else {
                 Toast.makeText(this, "Hubo un problema, intenta de nuevo", Toast.LENGTH_SHORT).show();
             }
@@ -462,7 +461,8 @@ public class SignUpIneFrontActivity extends AppCompatActivity {
             Log.d(TAG, "onActivityResult: Gallery Image Uri:  " + imageFileName);
             iv_ine_frente.setImageURI(contentUri);
 
-//                uploadImageToFirebase(imageFileName, contentUri);
+            uploadImageToFirebase(imageFileName, contentUri);
+
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
