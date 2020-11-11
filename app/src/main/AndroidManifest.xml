@@ -1,23 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.saloavalos.android_app_samir">
 
-    <uses-feature
-        android:name="android.hardware.camera"
+    <uses-feature android:name="android.hardware.camera"
         android:required="true" />
 
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+<!--    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="18" />-->
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity android:name=".activities.SignUpIneBackActivity"></activity>
+        android:theme="@style/AppTheme"
+        tools:ignore="AllowBackup">
+        <activity android:name=".activities.SignUpProfilePictureActivity"/>
+        <activity android:name=".activities.SignUpIneBackActivity" />
         <activity android:name=".activities.SignUpIneFrontActivity" />
         <activity android:name=".activities.SignInActivity" />
         <activity android:name=".activities.SignUpActivity" />
@@ -27,12 +29,11 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity> <!-- android:name="android.support.v4.content.FileProvider" -->
-        <!-- lo cambie y use la linea de abajo -->
-        <!-- android:name="androidx.core.content.FileProvider" -->
+        </activity>
+
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="com.saloavalos.android.fileprovider"
+            android:authorities="com.saloavalos.android_app_samir.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
