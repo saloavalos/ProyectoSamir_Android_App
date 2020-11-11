@@ -20,6 +20,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.util.Log;
 import android.util.Pair;
 import android.view.MenuItem;
@@ -81,7 +82,7 @@ public class SignUpIneFrontActivity extends AppCompatActivity {
     private final String[] both_permissions = new String[]{Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE};
 
     // booleans para checar si acepto los permisos de camera y storage
-    private boolean isPermissionForAllGranted = false;
+    private boolean isPermissionForAllGranted = false; // TODO quitar luego
     private boolean isCameraPermissionGranted = false;
     private boolean isStoragePermissionGranted = false;
 
@@ -322,17 +323,44 @@ public class SignUpIneFrontActivity extends AppCompatActivity {
 
         switch (requestCode) {
             case ALL_PERMISSIONS_CODE:
+
+                int contador_permisos_checados = 0;
+                int contador_permisos_permitidos = 0;
+
                 for (int i = 0; i < permissions.length; i++) {
+
+                    contador_permisos_checados += 1;
+
                     if (grantResults[i] == PackageManager.PERMISSION_GRANTED){
-                        isPermissionForAllGranted = true;
-                    } else {
-                        isPermissionForAllGranted = false;
-                        break;
+                        contador_permisos_permitidos += 1;
                     }
+
                 }
 
-                if (isPermissionForAllGranted) {
+                // si se aceptaron todos los permisos
+                if (contador_permisos_permitidos == permissions.length) {
                     dispatchTakePictureIntent();
+                }
+
+                // si se checaron todos los permisos pero y todos fueron permanentemente denegados
+                if (contador_permisos_checados == permissions.length) {
+
+                    //This block here means PERMANENTLY DENIED PERMISSION
+                    if (!ActivityCompat.shouldShowRequestPermissionRationale(SignUpIneFrontActivity.this, Manifest.permission.CAMERA)
+                        && !ActivityCompat.shouldShowRequestPermissionRationale(SignUpIneFrontActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                        new AlertDialog.Builder(SignUpIneFrontActivity.this)
+                            .setMessage("You have permanently denied the permissions required to use the camera, go to settings to enable this permission")
+                            .setPositiveButton("Go to settings", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    gotoApplicationSettings();
+                                }
+                            })
+                            .setNegativeButton("Cancel", null)
+                            .setCancelable(false)
+                            .show();
+                    }
+
                 }
 
                 break;
@@ -342,6 +370,22 @@ public class SignUpIneFrontActivity extends AppCompatActivity {
                     isCameraPermissionGranted = true;
                 } else {
                     isCameraPermissionGranted = false;
+
+                    //This block here means PERMANENTLY DENIED PERMISSION
+                    if (!ActivityCompat.shouldShowRequestPermissionRationale(SignUpIneFrontActivity.this, Manifest.permission.CAMERA)) {
+                        new AlertDialog.Builder(SignUpIneFrontActivity.this)
+                            .setMessage("You have permanently denied this permission, go to settings to enable this permission")
+                            .setPositiveButton("Go to settings", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    gotoApplicationSettings();
+                                }
+                            })
+                            .setNegativeButton("Cancel", null)
+                            .setCancelable(false)
+                            .show();
+
+                    }
                 }
 
                 break;
@@ -351,6 +395,22 @@ public class SignUpIneFrontActivity extends AppCompatActivity {
                     isStoragePermissionGranted = true;
                 } else {
                     isStoragePermissionGranted = false;
+
+                    //This block here means PERMANENTLY DENIED PERMISSION
+                    if (!ActivityCompat.shouldShowRequestPermissionRationale(SignUpIneFrontActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                        new AlertDialog.Builder(SignUpIneFrontActivity.this)
+                            .setMessage("You have permanently denied this permission, go to settings to enable this permission")
+                            .setPositiveButton("Go to settings", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    gotoApplicationSettings();
+                                }
+                            })
+                            .setNegativeButton("Cancel", null)
+                            .setCancelable(false)
+                            .show();
+
+                    }
                 }
 
                 break;
@@ -359,6 +419,17 @@ public class SignUpIneFrontActivity extends AppCompatActivity {
         if (isCameraPermissionGranted && isStoragePermissionGranted) {
             dispatchTakePictureIntent();
         }
+
+    }
+
+
+    private void gotoApplicationSettings() {
+
+        Intent intent = new Intent();
+        intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+        Uri uri = Uri.fromParts("package", this.getPackageName(), null);
+        intent.setData(uri);
+        startActivity(intent);
 
     }
 
