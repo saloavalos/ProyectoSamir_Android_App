@@ -51,7 +51,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:fontFamily="@font/open_sans"
-        android:text="Puedes tomar una foto o elegir una foto de tu galeria"
+        android:text="Presiona en la imagen, para tomar una foto con la cámara o elegir una foto de tu galeria."
         android:textColor="@color/color_subtitle"
         android:textSize="18sp" />
 
@@ -73,6 +73,7 @@
         android:layout_marginTop="32dp"
         android:fontFamily="@font/open_sans_semibold"
         android:text="Continuar"
+        android:enabled="false"
         android:textSize="17sp"
         android:transitionName="transition_btn_continue" />
 

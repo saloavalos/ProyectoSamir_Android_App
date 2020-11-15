@@ -15,4 +15,10 @@
     <color name="color_btn_white">#F3F3F3</color>
     <color name="color_btn_white_pressed">#ECECEC</color>
     <color name="color_btn_white_pressed2">#FFF7D9</color>
+
+    <!-- Dashboard activity colors -->
+    <color name="color_dashboard_datos_usuario">#0DECA400</color>
+    <color name="color_dashboard_datos_ventas_realizadas">#0D00A5EC</color>
+    <color name="color_dashboard_datos_ventas_realizadas_stroke">#00A5EC</color>
+
 </resources>

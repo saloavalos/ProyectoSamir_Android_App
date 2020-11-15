@@ -38,8 +38,7 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -60,14 +59,22 @@ public class SignUpIneFrontActivity extends AppCompatActivity {
     private Button btn_signup_continue;
     private ImageView iv_ine_frente;
 
-    // Firebase - Realtime Database
-    FirebaseDatabase rootNode;
-    DatabaseReference dbReference;
+    // These are used to get all values passed from a previous activity using Intent
+    private String name;
+    private String apellido_paterno;
+    private String apellido_materno;
+    private String direccion;
+    private String colonia;
+    private String municipio;
+    private String seccional;
+    private String role_user;
+    private String email;
+    private String password;
+    private String ine_frente_path;
 
-    // Firebase - Cloud Storage
-    private StorageReference storageReference;
 
     // To check result when trying to take or select image
+    // We can give any value
     private static final int REQUEST_TAKE_PHOTO = 0;
     private static final int REQUEST_GALLERY_PHOTO = 2;
 
@@ -85,10 +92,11 @@ public class SignUpIneFrontActivity extends AppCompatActivity {
     private boolean isCameraPermissionGranted = false;
     private boolean isStoragePermissionGranted = false;
 
-    // puedo calar pasar este valor con puExtra
-    String currentPhotoPath;
+    // To save where is located the photo taken with the camera
+    private String currentPhotoPath;
     private Bitmap image;
 
+    // An array to indicate options of the Alert Dialog
     private CharSequence[] alertDialogItems;
 
 
@@ -110,8 +118,24 @@ public class SignUpIneFrontActivity extends AppCompatActivity {
         linear_layout_top_part = findViewById(R.id.linear_layout_top_part);
         btn_signup_continue = findViewById(R.id.btn_signup_continue);
         iv_ine_frente = findViewById(R.id.iv_ine_frente);
-        // Firebase Storage
-        storageReference = FirebaseStorage.getInstance().getReference();
+
+
+
+
+        //--------------------------------------------------------------------
+        // Get all values passed from a previous activity using Intent
+        name = getIntent().getStringExtra("name");
+        apellido_paterno = getIntent().getStringExtra("apellido_paterno");
+        apellido_materno = getIntent().getStringExtra("apellido_materno");
+        direccion = getIntent().getStringExtra("direccion");
+        colonia = getIntent().getStringExtra("colonia");
+        municipio = getIntent().getStringExtra("municipio");
+        seccional = getIntent().getStringExtra("seccional");
+        role_user = getIntent().getStringExtra("role_user");
+        email = getIntent().getStringExtra("email");
+        password = getIntent().getStringExtra("password");
+        //--------------------------------------------------------------------
+
 
         // Defino los items del dialog
         alertDialogItems = new CharSequence[]{
@@ -145,30 +169,17 @@ public class SignUpIneFrontActivity extends AppCompatActivity {
             }
         });
 
+
         btn_signup_continue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                //--------------------------------------------------------------------
-                // Get all values passed from a previous activity using Intent
-                String name = getIntent().getStringExtra("name");
-                String apellido_paterno = getIntent().getStringExtra("apellido_paterno");
-                String apellido_materno = getIntent().getStringExtra("apellido_materno");
-                String direccion = getIntent().getStringExtra("direccion");
-                String colonia = getIntent().getStringExtra("colonia");
-                String municipio = getIntent().getStringExtra("municipio");
-                String seccional = getIntent().getStringExtra("seccional");
-                String role_user = getIntent().getStringExtra("role_user");
-                String email = getIntent().getStringExtra("email");
-                String password = getIntent().getStringExtra("password");
-                //--------------------------------------------------------------------
 
                 //--------------------------------------------------------------------
                 // Store data in Firebase
 //                rootNode = FirebaseDatabase.getInstance();
 //                dbReference = rootNode.getReference("world_series");
 
-                RegisterUser_HelperClass registerUser_helperClass = new RegisterUser_HelperClass(name, apellido_paterno, apellido_materno, direccion, colonia, municipio, seccional, role_user, email, password);
+                //RegisterUser_HelperClass registerUser_helperClass = new RegisterUser_HelperClass(name, apellido_paterno, apellido_materno, direccion, colonia, municipio, seccional, role_user, email, password);
                 //registerUser_helperClass.setPass("qwertyaz");
 
                 //Inside our reference create a child with this name "id"
@@ -191,9 +202,9 @@ public class SignUpIneFrontActivity extends AppCompatActivity {
                 intent.putExtra("role_user", role_user);
                 intent.putExtra("email", email);
                 intent.putExtra("password", password);
-                // Include INE Frontal
-//                intent.putExtra("ine_frontal", image);
-//                intent.putExtra("ine_frontal", currentPhotoPath);
+                // Incluye INE Frontal
+                // paso la ruta donde esta la imagen, para que en una siguiente activity (donde se necesite la imagen), pueda crear un URI para generar una referencia de la imagen
+                intent.putExtra("ine_frente", currentPhotoPath);
 
                 // shared transitions
                 Pair[] pairs = new Pair[2];
@@ -231,7 +242,7 @@ public class SignUpIneFrontActivity extends AppCompatActivity {
                 new AlertDialog.Builder(SignUpIneFrontActivity.this)
                     // TODO remplazar con un string
                     .setMessage("Es necesario el permiso de la camara y almacenamiento")
-                    .setCancelable(true)
+                    .setCancelable(false)
                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
@@ -263,7 +274,7 @@ public class SignUpIneFrontActivity extends AppCompatActivity {
                 new AlertDialog.Builder(SignUpIneFrontActivity.this)
                     // TODO remplazar con un string
                     .setMessage("Es necesario el permiso de la camara")
-                    .setCancelable(true)
+                    .setCancelable(false)
                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
@@ -294,7 +305,7 @@ public class SignUpIneFrontActivity extends AppCompatActivity {
                 new AlertDialog.Builder(SignUpIneFrontActivity.this)
                     // TODO remplazar con un string
                     .setMessage("Es necesario el permiso del almacenamiento")
-                    .setCancelable(true)
+                    .setCancelable(false)
                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
@@ -341,10 +352,10 @@ public class SignUpIneFrontActivity extends AppCompatActivity {
                     dispatchTakePictureIntent();
                 }
 
-                // si se checaron todos los permisos pero y todos fueron permanentemente denegados
+                // si se checaron todos los permisos pero
                 if (contador_permisos_checados == permissions.length) {
 
-                    //This block here means PERMANENTLY DENIED PERMISSION
+                    // y todos fueron permanentemente denegados
                     if (!ActivityCompat.shouldShowRequestPermissionRationale(SignUpIneFrontActivity.this, Manifest.permission.CAMERA)
                         && !ActivityCompat.shouldShowRequestPermissionRationale(SignUpIneFrontActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
                         new AlertDialog.Builder(SignUpIneFrontActivity.this)
@@ -446,22 +457,32 @@ public class SignUpIneFrontActivity extends AppCompatActivity {
                 mediaScanIntent.setData(contentUri);
                 this.sendBroadcast(mediaScanIntent);
 
-                uploadImageToFirebase(f.getName(), contentUri);
+                //uploadImageToFirebase(f.getName(), contentUri);
+
+                btn_signup_continue.setEnabled(true);
 
             } else {
+
                 Toast.makeText(this, "Hubo un problema, intenta de nuevo", Toast.LENGTH_SHORT).show();
             }
 
         }
 
         else if (requestCode == REQUEST_GALLERY_PHOTO && resultCode == Activity.RESULT_OK) {
-            Uri contentUri = data.getData();
-            String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-            String imageFileName = "JPEG_" + timeStamp + "." + getFileExt(contentUri);
-            Log.d(TAG, "onActivityResult: Gallery Image Uri:  " + imageFileName);
-            iv_ine_frente.setImageURI(contentUri);
+            if (data != null) {
+                Uri contentUri = data.getData();
+                String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+                String imageFileName = "JPEG_" + timeStamp + "." + getFileExt(contentUri);
+                Log.d(TAG, "onActivityResult: Gallery Image Uri:  " + imageFileName);
+                iv_ine_frente.setImageURI(contentUri);
 
-            uploadImageToFirebase(imageFileName, contentUri);
+                //uploadImageToFirebase(imageFileName, contentUri);
+
+                btn_signup_continue.setEnabled(true);
+            } else {
+
+                Toast.makeText(this, "Hubo un problema, intenta de nuevo", Toast.LENGTH_SHORT).show();
+            }
 
         } else {
             super.onActivityResult(requestCode, resultCode, data);
@@ -469,71 +490,40 @@ public class SignUpIneFrontActivity extends AppCompatActivity {
     }
 
 
-    private void uploadImage() {
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        image.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+    // es otro metodo de subir imagen, pero lo mas seguro que no lo use
+//    private void uploadImage() {
+//        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+//        image.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+//
+//        final String random = UUID.randomUUID().toString();
+//        StorageReference imageRef = storageReference.child("images/" + random);
+//
+//        byte[] b = stream.toByteArray();
+//        imageRef.putBytes(b)
+//                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+//                    @Override
+//                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+//                        taskSnapshot.getMetadata().getReference().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+//                            @Override
+//                            public void onSuccess(Uri uri) {
+//                                Uri downloadUri = uri;
+//                            }
+//                        });
+//
+//                        Toast.makeText(getApplicationContext(), "Photo Uploaded", Toast.LENGTH_SHORT).show();
+//                    }
+//                })
+//                .addOnFailureListener(new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception e) {
+//
+//                        Toast.makeText(getApplicationContext(), "Upload Failed", Toast.LENGTH_SHORT).show();
+//                    }
+//                });
+//    }
 
-        final String random = UUID.randomUUID().toString();
-        StorageReference imageRef = storageReference.child("images/" + random);
-
-        byte[] b = stream.toByteArray();
-        imageRef.putBytes(b)
-                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        taskSnapshot.getMetadata().getReference().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                            @Override
-                            public void onSuccess(Uri uri) {
-                                Uri downloadUri = uri;
-                            }
-                        });
-
-                        Toast.makeText(getApplicationContext(), "Photo Uploaded", Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-
-                        Toast.makeText(getApplicationContext(), "Upload Failed", Toast.LENGTH_SHORT).show();
-                    }
-                });
-    }
 
 
-    private void uploadImageToFirebase(String name, Uri contentUri) {
-        final ProgressBar p = findViewById(R.id.progressbar);
-        p.setVisibility(View.VISIBLE);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-
-        final StorageReference image = storageReference.child("pictures/" + name);
-        image.putFile(contentUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                p.setVisibility(View.GONE);
-                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-
-                image.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                    @Override
-                    public void onSuccess(Uri uri) {
-                        Log.d(TAG, "onSuccess: Uploaded Image URl is " + uri.toString());
-                    }
-                });
-
-                Toast.makeText(getApplicationContext(), "Image is Uploaded.", Toast.LENGTH_SHORT).show();
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                p.setVisibility(View.GONE);
-                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-
-                Toast.makeText(getApplicationContext(), "Upload Failled.", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-    }
 
 
     private String getFileExt(Uri contentUri) {
@@ -555,7 +545,6 @@ public class SignUpIneFrontActivity extends AppCompatActivity {
                 ".jpg",         /* suffix */
                 storageDir      /* directory */
         );
-        // Save a file: path for use with ACTION_VIEW intents
         currentPhotoPath = image.getAbsolutePath();
         return image;
     }
@@ -575,8 +564,7 @@ public class SignUpIneFrontActivity extends AppCompatActivity {
             }
             // Continue only if the File was successfully created
             if (photoFile != null) {
-//                Uri photoURI = FileProvider.getUriForFile(this,
-                // La foto ine frontal
+                // La foto ine frente
                 Uri photoURI = FileProvider.getUriForFile(this,
                         "com.saloavalos.android_app_samir.fileprovider",
                         photoFile);
@@ -609,11 +597,10 @@ public class SignUpIneFrontActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            //To support reverse transition when user clicks the action bar's Up/Home button
-            case android.R.id.home:
-                supportFinishAfterTransition();
-                return true;
+        //To support reverse transition when user clicks the action bar's Up/Home button
+        if (item.getItemId() == android.R.id.home) {
+            supportFinishAfterTransition();
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
