@@ -1,5 +1,6 @@
 package com.saloavalos.android_app_samir.activities;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
@@ -7,6 +8,7 @@ import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
 
+import android.util.Log;
 import android.util.Pair;
 import android.view.View;
 import android.view.Window;
@@ -16,8 +18,14 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.SignInMethodQueryResult;
 import com.saloavalos.android_app_samir.R;
 
 
@@ -33,6 +41,11 @@ public class SignUpActivity extends AppCompatActivity {
     // Inputs
     private TextInputLayout et_name, et_apellido_paterno, et_apellido_materno, et_direccion, et_colonia, et_municipio, et_seccional, et_role_user, et_email, et_password, et_confirm_password;
 
+    // Firebase - Firebase Authentication
+    private FirebaseAuth firebaseAuth;
+
+    // Check if email already exists
+    boolean isEmailAlredyRegistered;
 
 
     @Override
@@ -55,6 +68,9 @@ public class SignUpActivity extends AppCompatActivity {
         btn_signup_continue = findViewById(R.id.btn_signup_continue);
         linear_layout_top_part = findViewById(R.id.linear_layout_top_part);
         title = findViewById(R.id.title);
+
+        // Firebase - Firebase Authentication
+        firebaseAuth = FirebaseAuth.getInstance();
 
         //------ Inputs
         et_name = findViewById(R.id.et_name);
@@ -95,7 +111,7 @@ public class SignUpActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 // Ejecuta los Boolean methods para checar que los campos esten bien llenados
-                // con este parametro de or "|" para ejecutar todos los metodos y que no se detenga en alguno
+                //con este parametro de or "|" para ejecutar todos los metodos y que no se detenga en alguno
 //                if (!validateName() | !validateApellidoPaterno() | !validateApellidoMaterno() | !validateDireccion() | !validateColonia() | !validateMunicipio() | !validateSeccional() | !validateRoleUser() | !validateEmail() | !validatePassword() | !validateConfirmPassword()) {
 //                    return;     // si algun campo esta mal, omite el codigo restante
 //                }
@@ -279,10 +295,39 @@ public class SignUpActivity extends AppCompatActivity {
             et_email.setError("Email invalido");
             return false;
         } else {
-            // si ya lo corrigio y esta bien el campo, quita el mensaje de error
-            et_email.setError(null);
-            et_email.setErrorEnabled(false);
-            return true;
+
+            firebaseAuth.fetchSignInMethodsForEmail(input).addOnCompleteListener(new OnCompleteListener<SignInMethodQueryResult>() {
+                @Override
+                public void onComplete(@NonNull Task<SignInMethodQueryResult> task) {
+                    Log.d(TAG,""+task.getResult().getSignInMethods().size());
+                    if (task.getResult().getSignInMethods().size() == 0){
+                        // email not existed
+                        isEmailAlredyRegistered = false;
+                    }else {
+                        // email existed
+                        et_email.setError("Correo no disponible");
+                        isEmailAlredyRegistered = true;
+                    }
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(SignUpActivity.this, "Hubo un problema al validar el email", Toast.LENGTH_SHORT).show();
+                    // Dejo este boolean para que se detenga aqui y no continue con el registro
+                    isEmailAlredyRegistered = true;
+                    e.printStackTrace();
+                }
+            });
+
+            if (isEmailAlredyRegistered) {
+                return false;
+            } else {
+                // si esta bin el correo desde la primera vez
+                // o si ya lo corrigio y esta bien el campo, quita el mensaje de error
+                et_email.setError(null);
+                et_email.setErrorEnabled(false);
+                return true;
+            }
         }
     }
 
