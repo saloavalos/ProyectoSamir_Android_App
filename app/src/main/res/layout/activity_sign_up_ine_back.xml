@@ -78,4 +78,12 @@
         android:textSize="17sp"
         android:transitionName="transition_btn_continue" />
 
+    <ProgressBar
+        android:id="@+id/progressbar"
+        android:layout_width="100dp"
+        android:visibility="gone"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="28dp" />
+
 </LinearLayout>

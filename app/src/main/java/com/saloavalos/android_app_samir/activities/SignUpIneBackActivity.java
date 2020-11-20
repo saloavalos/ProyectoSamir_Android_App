@@ -31,10 +31,17 @@ import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.saloavalos.android_app_samir.R;
 
 import java.io.File;
@@ -49,18 +56,14 @@ public class SignUpIneBackActivity extends AppCompatActivity {
     private Button btn_signup_continue;
     private ImageView iv_ine_reverso;
 
-    // These are used to get all values passed from a previous activity using Intent
-    private String name;
-    private String apellido_paterno;
-    private String apellido_materno;
-    private String direccion;
-    private String colonia;
-    private String municipio;
-    private String seccional;
-    private String role_user;
-    private String email;
-    private String password;
-    private String ine_frente_path;
+    // Firebase - Firebase Authentication
+    private FirebaseAuth firebaseAuth;
+
+    // Firebase - Cloud Storage
+    private StorageReference storageReference;
+
+    // User id, I'd use it when storing photos
+    private String userID;
 
     // To check result when trying to take or select image
     // We can give any value
@@ -82,7 +85,7 @@ public class SignUpIneBackActivity extends AppCompatActivity {
     private boolean isStoragePermissionGranted = false;
 
     // To save where is located the photo taken with the camera
-    private String ine_reverso_path;
+    private String currentPhotoPath;
 
     // An array to indicate options of the Alert Dialog
     private CharSequence[] alertDialogItems;
@@ -107,20 +110,10 @@ public class SignUpIneBackActivity extends AppCompatActivity {
         iv_ine_reverso = findViewById(R.id.iv_ine_reverso);
 
 
-        //--------------------------------------------------------------------
-        // Get all values passed from a previous activity using Intent
-        name = getIntent().getStringExtra("name");
-        apellido_paterno = getIntent().getStringExtra("apellido_paterno");
-        apellido_materno = getIntent().getStringExtra("apellido_materno");
-        direccion = getIntent().getStringExtra("direccion");
-        colonia = getIntent().getStringExtra("colonia");
-        municipio = getIntent().getStringExtra("municipio");
-        seccional = getIntent().getStringExtra("seccional");
-        role_user = getIntent().getStringExtra("role_user");
-        email = getIntent().getStringExtra("email");
-        password = getIntent().getStringExtra("password");
-        ine_frente_path = getIntent().getStringExtra("ine_frente");
-        //--------------------------------------------------------------------
+        // Firebase - Firebase Authentication
+        firebaseAuth = FirebaseAuth.getInstance();
+        // Firebase - Cloud Storage
+        storageReference = FirebaseStorage.getInstance().getReference();
 
 
         // Defino los items del dialog
@@ -159,35 +152,56 @@ public class SignUpIneBackActivity extends AppCompatActivity {
         btn_signup_continue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //--------------------------------------------------------------------
-                Intent intent = new Intent(getApplicationContext(), SignUpProfilePictureActivity.class);
 
-                // Pass all values to the next activity
-                intent.putExtra("name", name);
-                intent.putExtra("apellido_paterno", apellido_paterno);
-                intent.putExtra("apellido_materno", apellido_materno);
-                intent.putExtra("direccion", direccion);
-                intent.putExtra("colonia", colonia);
-                intent.putExtra("municipio", municipio);
-                intent.putExtra("seccional", seccional);
-                intent.putExtra("role_user", role_user);
-                intent.putExtra("email", email);
-                intent.putExtra("password", password);
-                intent.putExtra("ine_frente", ine_frente_path);
-                // Incluye INE Reverso
-                // paso la ruta donde esta la imagen, para que en una siguiente activity (donde se necesite la imagen), pueda crear un URI para generar una referencia de la imagen
-                intent.putExtra("ine_reverso", ine_reverso_path);
+                final ProgressBar p = findViewById(R.id.progressbar);
+                p.setVisibility(View.VISIBLE);
 
-                // shared transitions
-                Pair[] pairs = new Pair[2];
+                // Impide que se detecte algun click en la pantalla, me sirve para que el usuario no vuelve a dar click a un boton que ya se presiono o si hay algun proceso de registro/actualizacion de datos
+                getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
 
-                pairs[0] = new Pair<View, String>(linear_layout_top_part, "transition_main_title");
-                pairs[1] = new Pair<View, String>(btn_signup_continue, "transition_btn_continue");
+                File file_current_photo = new File(currentPhotoPath);
+                Uri uri_current_photo = Uri.fromFile(file_current_photo);
 
-                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(SignUpIneBackActivity.this, pairs);
+                userID = firebaseAuth.getCurrentUser().getUid();
 
-                startActivity(intent, options.toBundle());
-                //--------------------------------------------------------------------
+                final StorageReference image = storageReference.child("users/" + userID + "/" + "ine_reverso.jpg");
+                image.putFile(uri_current_photo).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+                        // Hide progress bar and allow clicks in window
+                        p.setVisibility(View.GONE);
+                        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+
+                        //--------------------------------------------------------------------
+                        Intent intent = new Intent(getApplicationContext(), SignUpProfilePictureActivity.class);
+
+                        // shared transitions
+                        Pair[] pairs = new Pair[2];
+
+                        pairs[0] = new Pair<View, String>(linear_layout_top_part, "transition_main_title");
+                        pairs[1] = new Pair<View, String>(btn_signup_continue, "transition_btn_continue");
+
+                        ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(SignUpIneBackActivity.this, pairs);
+
+                        startActivity(intent, options.toBundle());
+                        //--------------------------------------------------------------------
+
+                        Toast.makeText(getApplicationContext(), "Image uploaded.", Toast.LENGTH_SHORT).show();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+
+                        // Hide progress bar and allow clicks in window
+                        p.setVisibility(View.GONE);
+                        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+
+                        Toast.makeText(getApplicationContext(), "Upload failed.", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
             }
         });
 
@@ -420,7 +434,7 @@ public class SignUpIneBackActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode == REQUEST_TAKE_PHOTO && resultCode == Activity.RESULT_OK) {
             if (data != null) {
-                File f = new File(ine_reverso_path);
+                File f = new File(currentPhotoPath);
                 iv_ine_reverso.setImageURI(Uri.fromFile(f));
                 Log.d(TAG, "Absolute Url of Image is " + Uri.fromFile(f));
 
@@ -478,7 +492,7 @@ public class SignUpIneBackActivity extends AppCompatActivity {
                 ".jpg",         /* suffix */
                 storageDir      /* directory */
         );
-        ine_reverso_path = image.getAbsolutePath();
+        currentPhotoPath = image.getAbsolutePath();
         return image;
     }
 
@@ -516,15 +530,18 @@ public class SignUpIneBackActivity extends AppCompatActivity {
     // si vuelve a la activity anterior
     public void goBack(View view) {
         //finish();
-        //To support reverse transitions when user clicks the device back button
-        supportFinishAfterTransition();
+        Toast.makeText(getApplicationContext(),"There is no back action",Toast.LENGTH_LONG).show();
     }
+
 
     @Override
     public void onBackPressed() {
         //To support reverse transitions when user clicks the device back button
-        supportFinishAfterTransition();
+//        supportFinishAfterTransition();
+        // super.onBackPressed();
+        Toast.makeText(getApplicationContext(),"There is no back action",Toast.LENGTH_LONG).show();
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

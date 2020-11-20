@@ -39,6 +39,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -59,19 +60,14 @@ public class SignUpIneFrontActivity extends AppCompatActivity {
     private Button btn_signup_continue;
     private ImageView iv_ine_frente;
 
-    // These are used to get all values passed from a previous activity using Intent
-    private String name;
-    private String apellido_paterno;
-    private String apellido_materno;
-    private String direccion;
-    private String colonia;
-    private String municipio;
-    private String seccional;
-    private String role_user;
-    private String email;
-    private String password;
-    private String ine_frente_path;
+    // Firebase - Firebase Authentication
+    private FirebaseAuth firebaseAuth;
 
+    // Firebase - Cloud Storage
+    private StorageReference storageReference;
+
+    // User id, I'd use it when storing photos
+    private String userID;
 
     // To check result when trying to take or select image
     // We can give any value
@@ -120,21 +116,12 @@ public class SignUpIneFrontActivity extends AppCompatActivity {
         iv_ine_frente = findViewById(R.id.iv_ine_frente);
 
 
+        // Firebase - Firebase Authentication
+        firebaseAuth = FirebaseAuth.getInstance();
+        // Firebase - Cloud Storage
+        storageReference = FirebaseStorage.getInstance().getReference();
 
 
-        //--------------------------------------------------------------------
-        // Get all values passed from a previous activity using Intent
-        name = getIntent().getStringExtra("name");
-        apellido_paterno = getIntent().getStringExtra("apellido_paterno");
-        apellido_materno = getIntent().getStringExtra("apellido_materno");
-        direccion = getIntent().getStringExtra("direccion");
-        colonia = getIntent().getStringExtra("colonia");
-        municipio = getIntent().getStringExtra("municipio");
-        seccional = getIntent().getStringExtra("seccional");
-        role_user = getIntent().getStringExtra("role_user");
-        email = getIntent().getStringExtra("email");
-        password = getIntent().getStringExtra("password");
-        //--------------------------------------------------------------------
 
 
         // Defino los items del dialog
@@ -174,48 +161,63 @@ public class SignUpIneFrontActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                //--------------------------------------------------------------------
-                // Store data in Firebase
-//                rootNode = FirebaseDatabase.getInstance();
-//                dbReference = rootNode.getReference("world_series");
+                final ProgressBar p = findViewById(R.id.progressbar);
+                p.setVisibility(View.VISIBLE);
 
-                //RegisterUser_HelperClass registerUser_helperClass = new RegisterUser_HelperClass(name, apellido_paterno, apellido_materno, direccion, colonia, municipio, seccional, role_user, email, password);
-                //registerUser_helperClass.setPass("qwertyaz");
+                // Impide que se detecte algun click en la pantalla, me sirve para que el usuario no vuelve a dar click a un boton que ya se presiono o si hay algun proceso de registro/actualizacion de datos
+                getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
 
-                //Inside our reference create a child with this name "id"
-                //and with set value we put data inside that id
-                //dbReference.child("id_ws_team_1").setValue(registerUser_helperClass);
-                //Toast.makeText(SignUpIneFrontActivity.this, "Registro exitoso", Toast.LENGTH_SHORT).show();
-                //--------------------------------------------------------------------
+                File file_current_photo = new File(currentPhotoPath);
+                Uri uri_current_photo = Uri.fromFile(file_current_photo);
 
-                //--------------------------------------------------------------------
-                Intent intent = new Intent(getApplicationContext(), SignUpIneBackActivity.class);
+                userID = firebaseAuth.getCurrentUser().getUid();
 
-                // Pass all values to the next activity
-                intent.putExtra("name", name);
-                intent.putExtra("apellido_paterno", apellido_paterno);
-                intent.putExtra("apellido_materno", apellido_materno);
-                intent.putExtra("direccion", direccion);
-                intent.putExtra("colonia", colonia);
-                intent.putExtra("municipio", municipio);
-                intent.putExtra("seccional", seccional);
-                intent.putExtra("role_user", role_user);
-                intent.putExtra("email", email);
-                intent.putExtra("password", password);
-                // Incluye INE Frontal
-                // paso la ruta donde esta la imagen, para que en una siguiente activity (donde se necesite la imagen), pueda crear un URI para generar una referencia de la imagen
-                intent.putExtra("ine_frente", currentPhotoPath);
+                final StorageReference image = storageReference.child("users/" + userID + "/" + "ine_frente.jpg");
+                image.putFile(uri_current_photo).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 
-                // shared transitions
-                Pair[] pairs = new Pair[2];
+                        // Hide progress bar and allow clicks in window
+                        p.setVisibility(View.GONE);
+                        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
 
-                pairs[0] = new Pair<View, String>(linear_layout_top_part, "transition_main_title");
-                pairs[1] = new Pair<View, String>(btn_signup_continue, "transition_btn_continue");
+                        //--------------------------------------------------------------------
+                        Intent intent = new Intent(getApplicationContext(), SignUpIneBackActivity.class);
 
-                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(SignUpIneFrontActivity.this, pairs);
+                        // shared transitions
+                        Pair[] pairs = new Pair[2];
 
-                startActivity(intent, options.toBundle());
-                //--------------------------------------------------------------------
+                        pairs[0] = new Pair<View, String>(linear_layout_top_part, "transition_main_title");
+                        pairs[1] = new Pair<View, String>(btn_signup_continue, "transition_btn_continue");
+
+                        ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(SignUpIneFrontActivity.this, pairs);
+
+                        startActivity(intent, options.toBundle());
+                        //--------------------------------------------------------------------
+
+//                        image1.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+//                            @Override
+//                            public void onSuccess(Uri uri) {
+//                                Log.d(TAG, "onSuccess: Uploaded Image URl is " + uri.toString());
+//                            }
+//                        });
+
+                        Toast.makeText(getApplicationContext(), "Image uploaded.", Toast.LENGTH_SHORT).show();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+
+                        // Hide progress bar and allow clicks in window
+                        p.setVisibility(View.GONE);
+                        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+
+                        Toast.makeText(getApplicationContext(), "Upload failed.", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+
             }
         });
 
@@ -583,15 +585,16 @@ public class SignUpIneFrontActivity extends AppCompatActivity {
     // si vuelve a la activity anterior
     public void goBack(View view) {
         //finish();
-        //To support reverse transitions when user clicks the device back button
-        supportFinishAfterTransition();
+        Toast.makeText(getApplicationContext(),"There is no back action",Toast.LENGTH_LONG).show();
     }
 
 
     @Override
     public void onBackPressed() {
         //To support reverse transitions when user clicks the device back button
-        supportFinishAfterTransition();
+//        supportFinishAfterTransition();
+        // super.onBackPressed();
+        Toast.makeText(getApplicationContext(),"There is no back action",Toast.LENGTH_LONG).show();
     }
 
 
