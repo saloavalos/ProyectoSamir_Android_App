@@ -208,21 +208,63 @@
 
             </LinearLayout>
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/et_role_user"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Cargo"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
-                android:layout_marginBottom="10.1dp">
+                android:layout_marginBottom="10.1dp"
+                android:orientation="horizontal"
+                android:weightSum="9">
 
-                <AutoCompleteTextView
-                    android:id="@+id/actv_role_user"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    />
+                    android:layout_marginEnd="8dp"
+                    android:layout_weight="6">
 
-            </com.google.android.material.textfield.TextInputLayout>
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/et_genero"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Genero"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
+                        >
+
+                        <AutoCompleteTextView
+                            android:id="@+id/actv_genero"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_marginStart="8dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/et_puesto"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Cargo"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
+                        >
+
+                        <AutoCompleteTextView
+                            android:id="@+id/actv_puesto"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/et_email"
@@ -282,6 +324,14 @@
                 android:textSize="17sp"
                 android:fontFamily="@font/open_sans_semibold"
                 android:text="Continuar" />
+
+            <ProgressBar
+                android:id="@+id/progressbar"
+                android:layout_width="100dp"
+                android:visibility="gone"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="28dp" />
 
         </LinearLayout>
 
